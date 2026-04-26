@@ -11,7 +11,6 @@
       --px-blue-light: #38c7ff;
       --px-blue-dark: #033f68;
       --px-night: #06111c;
-      --px-steel: #9fb7c8;
       --px-white: #ffffff;
     }
 
@@ -73,9 +72,7 @@
       border: 1px solid rgba(56,199,255,0.38);
       background: var(--px-night);
       z-index: 2;
-      box-shadow:
-        inset 0 0 35px rgba(56,199,255,0.16),
-        0 14px 32px rgba(0,0,0,0.26);
+      box-shadow: inset 0 0 35px rgba(56,199,255,0.16);
     }
 
     .px-visual img {
@@ -138,27 +135,43 @@
       font-size: 13px;
       font-weight: 1000;
       margin-bottom: 14px;
+      color: rgba(255,255,255,0.98);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.82);
+      box-shadow: inset 0 0 18px rgba(56,199,255,0.12);
     }
 
     h1 {
       font-size: clamp(32px, 3.55vw, 50px);
       line-height: 0.95;
-      margin-bottom: 14px;
+      margin: 0 0 14px;
       text-transform: uppercase;
+      text-shadow:
+        0 0 18px rgba(56,199,255,0.72),
+        0 0 50px rgba(11,143,216,0.28);
     }
 
-    h1 span { color: var(--px-blue-light); }
+    h1 span {
+      color: var(--px-blue-light);
+    }
 
     .px-lead {
       font-size: 17px;
-      margin-bottom: 14px;
+      margin: 0 0 14px;
+      color: rgba(255,255,255,0.95);
       font-weight: 800;
+      text-shadow:
+        0 1px 2px rgba(0,0,0,0.85),
+        0 0 10px rgba(0,0,0,0.55);
     }
 
     .px-text {
       font-size: 15px;
-      margin-bottom: 18px;
+      margin: 0 0 18px;
+      color: rgba(255,255,255,0.88);
       font-weight: 650;
+      text-shadow:
+        0 1px 2px rgba(0,0,0,0.82),
+        0 0 9px rgba(0,0,0,0.45);
     }
 
     .px-values {
@@ -178,7 +191,9 @@
       box-shadow:
         inset 0 0 22px rgba(56,199,255,0.10),
         inset 0 0 0 1px rgba(56,199,255,0.10);
+      color: rgba(255,255,255,0.94);
       font-weight: 900;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.85);
     }
 
     .px-value b {
@@ -193,7 +208,9 @@
       background: rgba(6,17,28,0.52);
       border: 1px solid rgba(56,199,255,0.38);
       margin-bottom: 18px;
+      color: rgba(255,255,255,0.94);
       font-weight: 800;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.85);
       box-shadow: inset 0 0 24px rgba(56,199,255,0.10);
     }
 
@@ -205,6 +222,13 @@
       color: white;
       text-decoration: none;
       font-weight: 900;
+      box-shadow: 0 0 24px rgba(56,199,255,0.26);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .px-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 32px rgba(56,199,255,0.38);
     }
 
     @keyframes glowMove {
@@ -214,9 +238,18 @@
 
     @media (max-width: 900px) {
       html, body { overflow: auto; }
-      .px-shell { grid-template-columns: 1fr; }
-      .px-visual { height: 340px; }
-      .px-values { grid-template-columns: 1fr; }
+
+      .px-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .px-visual {
+        height: 340px;
+      }
+
+      .px-values {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -267,7 +300,111 @@
   </section>
 
   <script>
-    // ton JS inchangé
+    const canvas = document.getElementById("pxParticles");
+    const ctx = canvas.getContext("2d");
+    const container = document.querySelector(".px-visual");
+
+    let particles = [];
+    let w = 0;
+    let h = 0;
+
+    const colors = [
+      "rgba(56,199,255,",
+      "rgba(11,143,216,",
+      "rgba(130,205,255,",
+      "rgba(160,185,200,",
+      "rgba(245,250,255,"
+    ];
+
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function resizeParticles() {
+      const rect = container.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+
+      canvas.width = w * window.devicePixelRatio;
+      canvas.height = h * window.devicePixelRatio;
+      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+
+      createParticles();
+    }
+
+    function createParticles() {
+      particles = [];
+
+      const amount = w < 600 ? 95 : 165;
+
+      for (let i = 0; i < amount; i++) {
+        particles.push({
+          x: rand(w * 0.54, w * 0.98),
+          y: rand(h * 0.04, h * 0.94),
+          size: rand(1.5, 6.5),
+          speedX: rand(0.35, 1.6),
+          speedY: rand(-0.35, 0.45),
+          alpha: rand(0.35, 0.95),
+          color: colors[Math.floor(rand(0, colors.length))],
+          rot: rand(0, Math.PI * 2),
+          rotSpeed: rand(-0.035, 0.035),
+          glow: rand(6, 18),
+          type: Math.random() > 0.55 ? "shard" : "spark"
+        });
+      }
+    }
+
+    function drawParticle(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = p.alpha;
+
+      ctx.fillStyle = p.color + p.alpha + ")";
+      ctx.shadowColor = p.color + "0.95)";
+      ctx.shadowBlur = p.glow;
+
+      if (p.type === "shard") {
+        ctx.beginPath();
+        ctx.moveTo(-p.size, -p.size * 0.35);
+        ctx.lineTo(p.size * 1.5, -p.size * 0.2);
+        ctx.lineTo(p.size * 0.45, p.size);
+        ctx.lineTo(-p.size * 0.7, p.size * 0.45);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size * 0.42, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, w, h);
+
+      particles.forEach((p) => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.rot += p.rotSpeed;
+
+        if (p.x > w + 30 || p.y < -30 || p.y > h + 30) {
+          p.x = rand(w * 0.54, w * 0.78);
+          p.y = rand(h * 0.10, h * 0.88);
+          p.alpha = rand(0.35, 0.95);
+        }
+
+        drawParticle(p);
+      });
+
+      requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener("resize", resizeParticles);
+
+    resizeParticles();
+    animateParticles();
   </script>
 </body>
 </html>
