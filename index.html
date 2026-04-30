@@ -437,12 +437,33 @@
     animateParticles();
   </script>
   <script>
+  <script>
   function sendHeight() {
-    const h = document.body.scrollHeight;
-    window.parent.postMessage({ iframeHeight: h }, '*');
+    var experience = document.querySelector('.px-experience');
+
+    var h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      experience ? experience.scrollHeight : 0
+    );
+
+    var extra = window.innerWidth <= 768 ? 260 : 40;
+
+    window.parent.postMessage({
+      frameId: 'px-frame-1',
+      iframeHeight: h + extra
+    }, '*');
   }
-  window.addEventListener('load', sendHeight);
+
+  window.addEventListener('load', function() {
+    sendHeight();
+    setTimeout(sendHeight, 300);
+    setTimeout(sendHeight, 800);
+    setTimeout(sendHeight, 1500);
+  });
+
   window.addEventListener('resize', sendHeight);
+</script>
 </script>
 </body>
 </html>
