@@ -28,6 +28,7 @@
 
     .px-about {
       width: min(1200px, 100%);
+      max-width: 100%;
       margin: 0 auto;
       padding: 10px;
     }
@@ -50,9 +51,12 @@
       display: none;
     }
 
+    /* ── PHOTO ── */
     .px-visual {
       position: relative;
-      height: 390px;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      max-height: 420px;
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid rgba(56,199,255,0.38);
@@ -105,6 +109,7 @@
       font-weight: 800;
     }
 
+    /* ── CONTENU ── */
     .px-content {
       position: relative;
       z-index: 2;
@@ -129,7 +134,7 @@
     }
 
     h1 {
-      font-size: clamp(32px, 3.55vw, 50px);
+      font-size: clamp(28px, 3.55vw, 50px);
       line-height: 0.95;
       margin: 0 0 14px;
       text-transform: uppercase;
@@ -219,26 +224,61 @@
       box-shadow: 0 0 32px rgba(56,199,255,0.38);
     }
 
-    @media (max-width: 900px) {
+    /* ── TABLETTE ── */
+    @media (max-width: 768px) {
       html, body {
         overflow: auto;
       }
 
       .px-about {
-        padding: 10px 14px;
+        padding: 10px 16px;
       }
 
       .px-shell {
         grid-template-columns: 1fr;
-        gap: 22px;
+        gap: 20px;
       }
 
       .px-visual {
-        height: 340px;
+        aspect-ratio: 4 / 3;
+        max-height: 320px;
+      }
+
+      .px-values {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 480px) {
+      .px-about {
+        padding: 10px 12px;
+      }
+
+      .px-visual {
+        aspect-ratio: 3 / 2;
+        max-height: 240px;
       }
 
       .px-values {
         grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .px-lead {
+        font-size: 15px;
+      }
+
+      .px-text {
+        font-size: 13px;
+      }
+
+      .px-photo-note strong {
+        font-size: 16px;
       }
     }
   </style>
@@ -264,7 +304,7 @@
         <h1>Thomas, votre expert <span>Phone Xpress</span></h1>
 
         <p class="px-lead">
-          Votre téléphone ne passe pas de main en main : Thomas s’occupe personnellement de chaque réparation.
+          Votre téléphone ne passe pas de main en main : Thomas s'occupe personnellement de chaque réparation.
         </p>
 
         <p class="px-text">
@@ -278,7 +318,7 @@
         </div>
 
         <div class="px-quote">
-          Pas d’intermédiaire : votre appareil est entre de bonnes mains.
+          Pas d'intermédiaire : votre appareil est entre de bonnes mains.
         </div>
 
         <a class="px-button" href="https://phonexpress.odoo.com/demande-de-devis" target="_blank">
