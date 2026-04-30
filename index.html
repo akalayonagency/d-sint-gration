@@ -436,5 +436,13 @@
     resizeParticles();
     animateParticles();
   </script>
+  <script>
+  function sendHeight() {
+    const h = document.body.scrollHeight;
+    window.parent.postMessage({ iframeHeight: h }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+</script>
 </body>
 </html>
