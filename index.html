@@ -482,14 +482,14 @@
   </script>
 
  <script>
+ <script>
   function sendHeight() {
-    var h = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight
-    );
+    var section = document.querySelector('.px-about');
+    if (!section) return;
+    var h = section.getBoundingClientRect().height;
     window.parent.postMessage({
       frameId: 'px-frame-1',
-      iframeHeight: h
+      iframeHeight: Math.ceil(h) + 20
     }, '*');
   }
 
@@ -497,11 +497,7 @@
     sendHeight();
     setTimeout(sendHeight, 300);
     setTimeout(sendHeight, 800);
-    setTimeout(sendHeight, 1500);
   });
-
-  /* PAS de window.addEventListener('resize', sendHeight) ici !
-     C'est Odoo qui gère le resize de son côté. */
 </script>
 </body>
 </html>
