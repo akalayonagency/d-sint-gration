@@ -481,27 +481,27 @@
     animateParticles();
   </script>
 
-  <script>
-    function sendHeight() {
-      var h = Math.max(
-        document.body.scrollHeight,
-        document.documentElement.scrollHeight
-      );
-      var extra = window.innerWidth <= 480 ? 40 : 30;
-      window.parent.postMessage({
-        frameId: 'px-frame-1',
-        iframeHeight: h + extra
-      }, '*');
-    }
+ <script>
+  function sendHeight() {
+    var h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+    window.parent.postMessage({
+      frameId: 'px-frame-1',
+      iframeHeight: h
+    }, '*');
+  }
 
-    window.addEventListener('load', function() {
-      sendHeight();
-      setTimeout(sendHeight, 300);
-      setTimeout(sendHeight, 800);
-      setTimeout(sendHeight, 1500);
-    });
+  window.addEventListener('load', function() {
+    sendHeight();
+    setTimeout(sendHeight, 300);
+    setTimeout(sendHeight, 800);
+    setTimeout(sendHeight, 1500);
+  });
 
-    window.addEventListener('resize', sendHeight);
-  </script>
+  /* PAS de window.addEventListener('resize', sendHeight) ici !
+     C'est Odoo qui gère le resize de son côté. */
+</script>
 </body>
 </html>
